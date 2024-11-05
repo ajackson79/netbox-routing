@@ -47,7 +47,7 @@ class ISISInstanceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = ISISInstance
-        fields = ('device_id', 'device', 'name', 'vrf_id', 'vrf', 'net')
+        fields = ('device_id', 'device', 'name', 'vrf_id', 'vrf', 'net', 'isis_type')
 
     def search(self, queryset, name, value):
         if not value.strip():

@@ -20,6 +20,7 @@ class ISISInstanceListIndex(SearchIndex):
         ('name', 100),
         ('comments', 5000),
         ('net', 100),
+        ('isis_type', 100),
     )
 
 @register_search

@@ -40,7 +40,7 @@ class ISISInstanceBulkEditForm(NetBoxModelBulkEditForm):
 
     model = ISISInstance
     fieldsets = (
-        FieldSet('device', 'vrf', 'net', name='ISIS'),
+        FieldSet('device', 'vrf', 'net', 'isis_type', name='ISIS'),
         FieldSet('description', ),
     )
     nullable_fields = ('vrf', 'description', )

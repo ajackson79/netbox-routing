@@ -32,7 +32,7 @@ class ISISInstanceFilterForm(NetBoxModelFilterSetForm):
     )
     model = ISISInstance
     fieldsets = (
-        FieldSet('q', 'filter_id', 'tag', 'device', 'vrf'),
+        FieldSet('q', 'filter_id', 'tag', 'device', 'vrf', 'isis_type'),
     )
     tag = TagFilterField(model)
 

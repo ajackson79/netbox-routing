@@ -19,9 +19,9 @@ class ISISInstanceSerializer(NetBoxModelSerializer):
     class Meta:
         model = ISISInstance
         fields = (
-            'url', 'id', 'display', 'name', 'net', 'device', 'vrf', 'description', 'comments',
+            'url', 'id', 'display', 'name', 'net', 'device', 'isis_type', 'vrf', 'description', 'comments',
         )
-        brief_fields = ('url', 'id', 'display', 'name', 'net', 'device', 'vrf', )
+        brief_fields = ('url', 'id', 'display', 'name', 'net', 'isis_type', 'device', 'vrf', )
 
 class ISISInterfaceSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='plugins-api:netbox_routing-api:isisinterface-detail')

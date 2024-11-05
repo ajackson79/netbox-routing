@@ -28,7 +28,7 @@ class ISISInstanceImportForm(NetBoxModelImportForm):
 
     class Meta:
         model = ISISInstance
-        fields = ('name', 'net', 'device', 'vrf', 'description', 'comments', 'tags',)
+        fields = ('name', 'net', 'device', 'isis_type', 'vrf', 'description', 'comments', 'tags',)
 
 class ISISInterfaceImportForm(NetBoxModelImportForm):
     instance = CSVModelChoiceField(

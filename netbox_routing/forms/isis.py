@@ -32,7 +32,7 @@ class ISISInstanceForm(NetBoxModelForm):
 
     class Meta:
         model = ISISInstance
-        fields = ('name', 'device', 'net', 'vrf', 'description', 'comments', )
+        fields = ('name', 'device', 'net', 'vrf', 'isis_type', 'description', 'comments', )
 
 class ISISInterfaceForm(NetBoxModelForm):
     device = DynamicModelChoiceField(

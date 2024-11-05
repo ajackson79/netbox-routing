@@ -24,8 +24,8 @@ class ISISInstanceTable(NetBoxTable):
     )
     class Meta(NetBoxTable.Meta):
         model = ISISInstance
-        fields = ('pk', 'id', 'name', 'net', 'device', 'vrf', )
-        default_columns = ('pk', 'id', 'name', 'net', 'device', )
+        fields = ('pk', 'id', 'name', 'net', 'isis_type', 'device', 'vrf', )
+        default_columns = ('pk', 'id', 'name', 'net', 'isis_type', 'device', )
 
 class ISISInterfaceTable(NetBoxTable):
     instance = tables.Column(
