@@ -6,6 +6,9 @@ from ipam.fields import IPNetworkField
 from netbox.models import PrimaryModel
 from netbox_routing.fields.ip import IPAddressField
 
+from django.core.exceptions import ValidationError
+import ipaddress
+
 
 __all__ = (
     'StaticRoute'
@@ -26,7 +29,7 @@ class StaticRoute(PrimaryModel):
         verbose_name='VRF'
     )
     prefix = IPNetworkField(help_text='IPv4 or IPv6 network with mask')
-    next_hop = IPAddressField()
+    next_hop = models.CharField(max_length=15, blank=False, null=False)        
     name = models.CharField(
         max_length=50,
         verbose_name='Name',
@@ -38,6 +41,16 @@ class StaticRoute(PrimaryModel):
         verbose_name='Metric',
         blank=True,
         default=1,
+    )
+    route_tag = models.PositiveSmallIntegerField(
+        verbose_name='Route Tag',
+        blank=True,
+        null=True,
+        choices=[
+            (9999, 9999),
+            (9993, 9993),
+            (9666, 9666)
+            ]
     )
     permanent = models.BooleanField(default=False, blank=True, null=True,)
 
@@ -60,10 +73,21 @@ class StaticRoute(PrimaryModel):
             ),
         )
 
+    def clean(self):
+        super().clean()
+        if self.next_hop == "Null0":
+            return  # Accept "Null0" as valid
+        try:
+            # Validate IP address
+            ipaddress.ip_address(self.next_hop)
+        except ValueError:
+            raise ValidationError("next_hop must be a valid IP address or 'Null0'.")
+
     def __str__(self):
         if self.vrf is None:
             return f'{self.prefix} NH {self.next_hop}'
         return f'{self.prefix} VRF {self.vrf} NH {self.next_hop}'
+        return self.next_hop
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_routing:staticroute', args=[self.pk])

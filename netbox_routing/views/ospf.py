@@ -1,17 +1,17 @@
 from netbox.views.generic import ObjectListView, ObjectEditView, ObjectView, ObjectDeleteView, ObjectChildrenView, \
     BulkImportView, BulkEditView, BulkDeleteView
-from netbox_routing.filtersets.ospf import OSPFInterfaceFilterSet, OSPFAreaFilterSet, OSPFInstanceFilterSet
+from netbox_routing.filtersets.ospf import OSPFInterfaceFilterSet, OSPFAreaFilterSet, OSPFInstanceFilterSet, OSPFNetworksFilterSet
 from netbox_routing.forms import *
-from netbox_routing.tables.ospf import OSPFAreaTable, OSPFInstanceTable, OSPFInterfaceTable
+from netbox_routing.tables.ospf import OSPFAreaTable, OSPFInstanceTable, OSPFInterfaceTable, OSPFNetworksTable
 from utilities.views import register_model_view, ViewTab
 
-from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface
-
+from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface, OSPFNetworks
 
 __all__ = (
     'OSPFInstanceListView',
     'OSPFInstanceView',
     'OSPFInstanceInterfacesView',
+    'OSPFInstanceNetworksView',
     'OSPFInstanceEditView',
     'OSPFInstanceBulkEditView',
     'OSPFInstanceDeleteView',
@@ -31,6 +31,13 @@ __all__ = (
     'OSPFInterfaceBulkEditView',
     'OSPFInterfaceDeleteView',
     'OSPFInterfaceBulkDeleteView',
+
+    'OSPFNetworksListView',
+    'OSPFNetworksView',
+    'OSPFNetworksEditView',
+    'OSPFNetworksBulkEditView',
+    'OSPFNetworksDeleteView',
+    'OSPFNetworksBulkDeleteView',
 )
 
 
@@ -61,6 +68,23 @@ class OSPFInstanceInterfacesView(ObjectChildrenView):
     tab = ViewTab(
         label='Interfaces',
         badge=lambda obj: OSPFInterface.objects.filter(instance=obj).count(),
+        hide_if_empty=False,
+    )
+
+    def get_children(self, request, parent):
+        return self.child_model.objects.filter(instance=parent)
+
+
+@register_model_view(OSPFInstance, name='networks')
+class OSPFInstanceNetworksView(ObjectChildrenView):
+    template_name = 'netbox_routing/object_children.html'
+    queryset = OSPFInstance.objects.all()
+    child_model = OSPFNetworks
+    table = OSPFNetworksTable
+    filterset = OSPFNetworksFilterSet
+    tab = ViewTab(
+        label='Networks',
+        badge=lambda obj: OSPFNetworks.objects.filter(instance=obj).count(),
         hide_if_empty=False,
     )
 
@@ -207,3 +231,51 @@ class OSPFInterfaceBulkDeleteView(BulkDeleteView):
     queryset = OSPFInterface.objects.all()
     filterset = OSPFInterfaceFilterSet
     table = OSPFInterfaceTable
+
+
+#
+# Networks
+#
+@register_model_view(OSPFNetworks, name='list')
+class OSPFNetworksListView(ObjectListView):
+    queryset = OSPFNetworks.objects.all()
+    table = OSPFNetworksTable
+    filterset = OSPFNetworksFilterSet
+    filterset_form = OSPFNetworksFilterForm
+
+
+@register_model_view(OSPFNetworks)
+class OSPFNetworksView(ObjectView):
+    queryset = OSPFNetworks.objects.all()
+    template_name = 'netbox_routing/ospfnetworks.html'
+
+
+@register_model_view(OSPFNetworks, name='edit')
+class OSPFNetworksEditView(ObjectEditView):
+    queryset = OSPFNetworks.objects.all()
+    form = OSPFNetworksForm
+
+
+@register_model_view(OSPFNetworks, name='bulk_edit')
+class OSPFNetworksBulkEditView(BulkEditView):
+    queryset = OSPFNetworks.objects.all()
+    table = OSPFNetworksTable
+    filterset = OSPFNetworksFilterSet
+    form = OSPFNetworksBulkEditForm
+
+
+@register_model_view(OSPFNetworks, name='delete')
+class OSPFNetworksDeleteView(ObjectDeleteView):
+    queryset = OSPFNetworks.objects.all()
+
+
+@register_model_view(OSPFNetworks, name='delete')
+class OSPFNetworksBulkDeleteView(BulkDeleteView):
+    queryset = OSPFNetworks.objects.all()
+    table = OSPFNetworksTable
+    filterset = OSPFNetworksFilterSet
+
+
+class OSPFNetworksBulkImportView(BulkImportView):
+    queryset = OSPFNetworks.objects.all()
+    model_form = OSPFNetworksImportForm

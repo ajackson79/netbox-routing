@@ -30,6 +30,7 @@ class StaticRouteBulkEditForm(NetBoxModelBulkEditForm):
         selector=True,
     )
     metric = forms.IntegerField(label=_('Metric'), required=False)
+    route_tag = forms.IntegerField(label=_('Route Tag'), required=False)
     permanent = forms.ChoiceField(label=_('Permanent'), choices=BOOLEAN_WITH_BLANK_CHOICES, required=False)
 
     description = forms.CharField(
@@ -42,7 +43,7 @@ class StaticRouteBulkEditForm(NetBoxModelBulkEditForm):
     model = StaticRoute
     fieldsets = (
         FieldSet('devices', 'vrf', 'prefix', 'next_hop', name='Route'),
-        FieldSet('metric', 'permanent', name='Attributes'),
+        FieldSet('metric', 'route_tag', 'permanent', name='Attributes'),
         FieldSet('description', )
     )
-    nullable_fields = ('devices', 'vrf', 'metric', 'permanent', 'description', 'comments')
+    nullable_fields = ('devices', 'vrf', 'metric', 'route_tag', 'permanent', 'description', 'comments')

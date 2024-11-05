@@ -1,13 +1,18 @@
 from .static import StaticRouteFilterForm
 from .bgp import BGPRouterFilterForm, BGPScopeFilterForm, BGPAddressFamilyFilterForm, BGPSettingFilterForm
-from .ospf import OSPFAreaFilterForm, OSPFInstanceFilterForm, OSPFInterfaceFilterForm
+from .ospf import OSPFAreaFilterForm, OSPFInstanceFilterForm, OSPFInterfaceFilterForm, OSPFNetworksFilterForm
 from .objects import PrefixListFilterForm, PrefixListEntryFilterForm, RouteMapFilterForm,\
     RouteMapEntryFilterForm
 from .eigrp import *
+from .isis import *
 
 __all__ = (
     # Static
     'StaticRouteFilterForm',
+
+    # ISIS
+    'ISISInstanceFilterForm',
+    'ISISInterfaceFilterForm',
 
     # BGP
     'BGPRouterFilterForm',
@@ -25,6 +30,7 @@ __all__ = (
     'OSPFAreaFilterForm',
     'OSPFInstanceFilterForm',
     'OSPFInterfaceFilterForm',
+    'OSPFNetworksFilterForm',
 
     # Routing Objects
     'PrefixListFilterForm',

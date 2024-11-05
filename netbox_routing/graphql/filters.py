@@ -5,6 +5,8 @@ from netbox_routing import filtersets, models
 
 __all__ = (
     'StaticRouteFilter',
+    'ISISInstanceFilter',
+    'ISISInterfaceFilter',
     'OSPFInstanceFilter',
     'OSPFAreaFilter',
     'OSPFInterfaceFilter',
@@ -21,6 +23,15 @@ class StaticRouteFilter(BaseFilterMixin):
     prefix: str
     next_hop: str
 
+@strawberry_django.filter(models.ISISInstance, lookups=True)
+@autotype_decorator(filtersets.ISISInstanceFilterSet)
+class ISISInstanceFilter(BaseFilterMixin):
+    net: str
+
+@strawberry_django.filter(models.ISISInterface, lookups=True)
+@autotype_decorator(filtersets.ISISInterfaceFilterSet)
+class ISISInterfaceFilter(BaseFilterMixin):
+    pass
 
 @strawberry_django.filter(models.OSPFInstance, lookups=True)
 @autotype_decorator(filtersets.OSPFInstanceFilterSet)

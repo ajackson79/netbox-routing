@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 
 from netbox.models import PrimaryModel
 
+from ipam.fields import IPNetworkField
 from netbox_routing import choices
 from netbox_routing.fields.ip import IPAddressField
 
@@ -14,13 +15,18 @@ __all__ = (
     'OSPFInstance',
     'OSPFArea',
     'OSPFInterface',
+    'OSFPNetworks',
 )
 
 
 class OSPFInstance(PrimaryModel):
     name = models.CharField(max_length=100)
     router_id = IPAddressField(verbose_name=_('Router ID'))
-    process_id = models.IntegerField(verbose_name=_('Process ID'))
+    process_id = models.IntegerField(
+        verbose_name=_('Process ID'),
+        null=True,
+        blank=True
+    )
     device = models.ForeignKey(
         to='dcim.Device',
         related_name='ospf_instances',
@@ -44,6 +50,17 @@ class OSPFInstance(PrimaryModel):
 
     class Meta:
         verbose_name = 'OSPF Instance'
+        ordering = ('router_id', 'name', 'device', 'vrf')
+        constraints = (
+            models.UniqueConstraint(
+                fields=('router_id', 'device', 'vrf'),
+                name='%(app_label)s_%(class)s_unique_router_id_device'
+            ),
+            models.UniqueConstraint(
+                fields=('router_id', 'vrf',),
+                name='%(app_label)s_%(class)s_unique_router_id_vrf'
+            ),
+        )
 
     def __str__(self):
         return f'{self.name} ({self.router_id})'
@@ -100,6 +117,7 @@ class OSPFInterface(PrimaryModel):
         blank=False,
         null=False
     )
+    cost = models.SmallIntegerField(verbose_name='Cost', blank=True, null=True)
     passive = models.BooleanField(verbose_name='Passive', blank=True, null=True)
     priority = models.IntegerField(blank=True, null=True)
     bfd = models.BooleanField(blank=True, null=True, verbose_name='BFD')
@@ -136,3 +154,37 @@ class OSPFInterface(PrimaryModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_routing:ospfinterface', args=[self.pk])
 
+class OSPFNetworks(PrimaryModel):
+    network = IPNetworkField()
+    instance = models.ForeignKey(
+        to='netbox_routing.OSPFInstance',
+        related_name='networks',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+    )
+    area = models.ForeignKey(
+        to='netbox_routing.OSPFArea',
+        on_delete=models.CASCADE,
+        related_name='networks',
+        blank=False,
+        null=False
+    )
+    prerequisite_models = (
+        'netbox_routing.OSPFInstance', 'netbox_routing.OSPFArea'
+    )
+    class Meta:
+        verbose_name = 'OSPF Network Statement'
+        ordering = ('network', 'instance', 'area')
+        constraints = (
+            models.UniqueConstraint(
+                fields=('network', 'instance', 'area'),
+                name='%(app_label)s_%(class)s_unique_network'
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.network}'
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_routing:ospfnetworks', args=[self.pk])

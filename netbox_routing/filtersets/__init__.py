@@ -3,10 +3,14 @@ from .objects import PrefixListFilterSet, PrefixListEntryFilterSet, RouteMapFilt
 from .ospf import *
 from .bgp import *
 from .eigrp import *
+from .isis import *
 
 
 __all__ = (
     'StaticRouteFilterSet',
+
+    'ISISInstanceFilterSet',
+    'ISISInterfaceFilterSet',
 
     'BGPSettingFilterSet',
     'BGPRouterFilterSet',
@@ -14,6 +18,7 @@ __all__ = (
     'OSPFInstanceFilterSet',
     'OSPFAreaFilterSet',
     'OSPFInterfaceFilterSet',
+    'OSPFNetworksFilterSet',
 
     'EIGRPRouterFilterSet',
     'EIGRPAddressFamilyFilterSet',

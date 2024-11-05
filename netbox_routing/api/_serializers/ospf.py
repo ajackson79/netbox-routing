@@ -4,13 +4,14 @@ from dcim.api.serializers_.device_components import InterfaceSerializer
 from dcim.api.serializers_.devices import DeviceSerializer
 from ipam.api.serializers_.vrfs import VRFSerializer
 from netbox.api.serializers import NetBoxModelSerializer
-from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface
+from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface, OSPFNetworks
 
 
 __all__ = (
     'OSPFInstanceSerializer',
     'OSPFAreaSerializer',
     'OSPFInterfaceSerializer',
+    'OSPFNetworksSerializer',
 )
 
 
@@ -45,9 +46,19 @@ class OSPFInterfaceSerializer(NetBoxModelSerializer):
     class Meta:
         model = OSPFInterface
         fields = (
-            'url', 'id', 'display', 'instance', 'area', 'interface', 'passive', 'priority', 'bfd', 'authentication',
+            'url', 'id', 'display', 'instance', 'area', 'interface', 'cost', 'passive', 'priority', 'bfd', 'authentication',
             'passphrase', 'description', 'comments',
         )
         brief_fields = (
             'url', 'id', 'display', 'instance', 'area', 'interface', 'passive',
         )
+
+class OSPFNetworksSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='plugins-api:netbox_routing-api:ospfnetworks-detail')
+    instance = OSPFInstanceSerializer(nested=True)
+    area = OSPFAreaSerializer(nested=True)
+
+    class Meta:
+        model = OSPFNetworks
+        fields = ('url', 'id', 'display', 'network', 'instance', 'area', 'comments',)
+        brief_fields = ('url', 'id', 'display', 'network', 'instance', 'area')

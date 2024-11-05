@@ -8,13 +8,14 @@ from netbox.forms import NetBoxModelForm
 from utilities.forms import BOOLEAN_WITH_BLANK_CHOICES
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, CommentField
 
-from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface
+from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface, OSPFNetworks
 
 
 __all__ = (
     'OSPFAreaForm',
     'OSPFInstanceForm',
     'OSPFInterfaceForm',
+    'OSPFNetworksForm',
 )
 
 
@@ -83,7 +84,7 @@ class OSPFInterfaceForm(NetBoxModelForm):
     class Meta:
         model = OSPFInterface
         fields = (
-            'device', 'instance', 'area', 'interface', 'passive', 'priority', 'bfd', 'authentication', 'passphrase',
+            'device', 'instance', 'area', 'interface', 'cost', 'passive', 'priority', 'bfd', 'authentication', 'passphrase',
             'description', 'comments',
         )
 
@@ -107,3 +108,25 @@ class OSPFInterfaceForm(NetBoxModelForm):
                         'interface': _('OSPF Instance Device and Interface Device must match')
                     }
                 )
+
+class OSPFNetworksForm(NetBoxModelForm):
+    instance = DynamicModelChoiceField(
+        queryset=OSPFInstance.objects.all(),
+        required=True,
+        selector=True,
+        label=_('Instance'),
+        query_params={
+            'device_id': '$device',
+        }
+    )
+    area = DynamicModelChoiceField(
+        queryset=OSPFArea.objects.all(),
+        required=True,
+        selector=True,
+        label=_('Area'),
+    )
+    comments = CommentField()
+
+    class Meta:
+        model = OSPFNetworks
+        fields = ('network', 'instance', 'area')

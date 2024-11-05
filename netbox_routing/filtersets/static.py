@@ -45,7 +45,7 @@ class StaticRouteFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = StaticRoute
-        fields = ('name', 'devices', 'device', 'device_id', 'vrf', 'vrf_id', 'prefix', 'metric', 'next_hop')
+        fields = ('name', 'devices', 'device', 'device_id', 'vrf', 'vrf_id', 'prefix', 'metric', 'route_tag', 'next_hop')
 
     def search(self, queryset, name, value):
         if not value.strip():
@@ -56,7 +56,8 @@ class StaticRouteFilterSet(NetBoxModelFilterSet):
             Q(vrf__rd__icontains=value) |
             Q(prefix__icontains=value) |
             Q(next_hop__icontains=value) |
-            Q(name__icontains=value)
+            Q(name__icontains=value) |
+            Q(route_tag=value)
         )
         return queryset.filter(qs_filter).distinct()
 

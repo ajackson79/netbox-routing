@@ -22,10 +22,10 @@ class StaticRouteSerializer(NetBoxModelSerializer):
     class Meta:
         model = StaticRoute
         fields = (
-            'url', 'id', 'display', 'devices', 'vrf', 'prefix', 'next_hop', 'name', 'metric', 'permanent',
+            'url', 'id', 'display', 'devices', 'vrf', 'prefix', 'next_hop', 'name', 'metric', 'route_tag', 'permanent',
             'description', 'comments'
         )
-        brief_fields = ('url', 'id', 'display', 'name', 'prefix', 'next_hop', 'description')
+        brief_fields = ('url', 'id', 'display', 'name', 'prefix', 'next_hop', 'route_tag', 'description')
 
     def create(self, validated_data):
         devices = validated_data.pop('devices', None)

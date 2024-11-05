@@ -8,13 +8,14 @@ from ipam.models import VRF
 from utilities.filters import MultiValueCharFilter
 
 from netbox.filtersets import NetBoxModelFilterSet
-from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface
+from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface, OSPFNetworks
 
 
 __all__ = (
     'OSPFAreaFilterSet',
     'OSPFInstanceFilterSet',
-    'OSPFInterfaceFilterSet'
+    'OSPFInterfaceFilterSet',
+    'OSPFNetworksFilterSet',
 )
 
 
@@ -153,7 +154,7 @@ class OSPFInterfaceFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = OSPFInterface
-        fields = ('instance', 'area', 'interface', 'passive', 'bfd', 'priority', 'authentication', 'passphrase')
+        fields = ('instance', 'area', 'interface','cost', 'passive', 'bfd', 'priority', 'authentication', 'passphrase')
 
     def search(self, queryset, name, value):
         if not value.strip():
@@ -167,3 +168,41 @@ class OSPFInterfaceFilterSet(NetBoxModelFilterSet):
         )
         return queryset.filter(qs_filter).distinct()
 
+
+class OSPFNetworksFilterSet(NetBoxModelFilterSet):
+    instance_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='instance',
+        queryset=OSPFInstance.objects.all(),
+        label='Instance (ID)',
+    )
+    instance = django_filters.ModelMultipleChoiceFilter(
+        field_name='instance__name',
+        queryset=OSPFInstance.objects.all(),
+        to_field_name='name',
+        label='Instance',
+    )
+    area_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='area',
+        queryset=OSPFArea.objects.all(),
+        label='Area (ID)',
+    )
+    area = django_filters.ModelMultipleChoiceFilter(
+        field_name='area__area_id',
+        queryset=OSPFArea.objects.all(),
+        to_field_name='area_id',
+        label='Area',
+    )
+
+    class Meta:
+        model = OSPFNetworks
+        fields = ('instance', 'area',)
+
+    def search(self, queryset, name, value):
+        if not value.strip():
+            return queryset
+        qs_filter = (
+            Q(instance__name__icontains=value) |
+            Q(area__area_id__icontains=value)
+        )
+        return queryset.filter(qs_filter).distinct()
+    

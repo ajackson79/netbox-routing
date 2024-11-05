@@ -7,13 +7,18 @@ from netbox_routing.api._serializers.bgp import (
 )
 from netbox_routing.api._serializers.ospf import *
 from netbox_routing.api._serializers.eigrp import *
+from netbox_routing.api._serializers.isis import *
 
 __all__ = (
     'StaticRouteSerializer',
 
+    'ISISInstanceSerializer',
+    'ISISInterfaceSerializer',
+
     'OSPFInstanceSerializer',
     'OSPFAreaSerializer',
     'OSPFInterfaceSerializer',
+    'OSPFNetworksSerializer',
 
     'EIGRPRouterSerializer',
     'EIGRPAddressFamilySerializer',

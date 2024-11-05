@@ -10,6 +10,7 @@ from .ospf import *
 from .eigrp import *
 from .bgp import *
 from .core import *
+from .isis import *
 
 __all__ = (
     # Core View Extensions
@@ -24,12 +25,25 @@ __all__ = (
     'StaticRouteDeleteView',
     'StaticRouteBulkDeleteView',
 
+    # ISIS
+    'ISISInstanceListView',
+    'ISISInstanceView',
+    'ISISInstanceEditView',
+    'ISISInstanceDeleteView',
+    'ISISInstanceInterfacesView',
+
+    'ISISInterfaceListView',
+    'ISISInterfaceView',
+    'ISISInterfaceEditView',
+    'ISISInterfaceDeleteView',
+
     # OSPF
     'OSPFInstanceListView',
     'OSPFInstanceView',
     'OSPFInstanceEditView',
     'OSPFInstanceDeleteView',
     'OSPFInstanceInterfacesView',
+    'OSPFInstanceNetworksView',
 
     'OSPFAreaListView',
     'OSPFAreaView',
@@ -41,6 +55,13 @@ __all__ = (
     'OSPFInterfaceView',
     'OSPFInterfaceEditView',
     'OSPFInterfaceDeleteView',
+
+    'OSPFNetworksListView',
+    'OSPFNetworksView',
+    'OSPFNetworksEditView',
+    'OSPFNetworksBulkEditView',
+    'OSPFNetworksDeleteView',
+    'OSPFNetworksBulkDeleteView',
 
     # EIGRP
     'EIGRPRouterListView',

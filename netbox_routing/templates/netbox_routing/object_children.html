@@ -3,11 +3,25 @@
 
 {% block bulk_extra_controls %}
     {{ block.super }}
-    {% if perms.netbox_routing.add_ospfinterface %}
-        <div class="bulk-button-group">
+    {% if 'interface' in request.path and 'ospf' in request.path and perms.netbox_routing.add_ospfinterface%}
+        <div class="bulk-button-group mt-2">
             <a href="{% url 'plugins:netbox_routing:ospfinterface_add' %}?instance={{ object.pk }}&return_url={{ return_url }}"
                class="btn btn-primary btn-sm">
                 <i class="mdi mdi-plus-thick" aria-hidden="true"></i> Add OSPF Interface
+            </a>
+        </div>
+    {% elif 'networks' in request.path and 'ospf' in request.path %}
+        <div class="bulk-button-group mt-2">
+            <a href="{% url 'plugins:netbox_routing:ospfnetworks_add' %}?instance={{ object.pk }}&return_url={{ return_url }}"
+               class="btn btn-primary btn-sm">
+                <i class="mdi mdi-plus-thick" aria-hidden="true"></i> Add OSPF Network
+            </a>
+        </div>
+    {% elif 'isis' in request.path and 'isis' in request.path %}
+        <div class="bulk-button-group mt-2">
+            <a href="{% url 'plugins:netbox_routing:isisinterface_add' %}?instance={{ object.pk }}&return_url={{ return_url }}"
+            class="btn btn-primary btn-sm">
+                <i class="mdi mdi-plus-thick" aria-hidden="true"></i> Add ISIS Interface
             </a>
         </div>
     {% endif %}

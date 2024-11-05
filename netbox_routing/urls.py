@@ -5,7 +5,7 @@ from utilities.urls import get_model_urls
 
 from . import views
 from .models import StaticRoute, PrefixList, PrefixListEntry, RouteMap, RouteMapEntry, OSPFInstance, OSPFArea, \
-    OSPFInterface, BGPRouter, BGPScope, BGPAddressFamily
+    OSPFInterface, OSPFNetworks, BGPRouter, BGPScope, BGPAddressFamily, ISISInstance, ISISInterface
 
 
 urlpatterns = [
@@ -20,6 +20,27 @@ urlpatterns = [
     path('routes/static/<int:pk>/delete/', views.StaticRouteDeleteView.as_view(), name='staticroute_delete'),
     path('routes/static/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='staticroute_changelog', kwargs={'model': StaticRoute}),
 
+    path('isis/instance/', views.ISISInstanceListView.as_view(), name='isisinstance_list'),
+    path('isis/instance/add/', views.ISISInstanceEditView.as_view(), name='isisinstance_add'),
+    path('isis/instance/edit/', views.ISISInstanceBulkEditView.as_view(), name='isisinstance_bulk_edit'),
+    path('isis/instance/delete/', views.ISISInstanceBulkDeleteView.as_view(), name='isisinstance_bulk_delete'),
+    path('isis/instance/import/', views.ISISInstanceListView.as_view(), name='isisinstance_import'),
+    path('isis/instance/<int:pk>/', views.ISISInstanceView.as_view(), name='isisinstance'),
+    path('isis/instance/<int:pk>/edit/', views.ISISInstanceEditView.as_view(), name='isisinstance_edit'),
+    path('isis/instance/<int:pk>/interfaces/', views.ISISInstanceInterfacesView.as_view(), name='isisinstance_interfaces'),
+    path('isis/instance/<int:pk>/delete/', views.ISISInstanceDeleteView.as_view(), name='isisinstance_delete'),
+    path('isis/instance/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='isisinstance_changelog', kwargs={'model': ISISInstance}),
+
+    path('isis/interface/', views.ISISInterfaceListView.as_view(), name='isisinterface_list'),
+    path('isis/interface/add/', views.ISISInterfaceEditView.as_view(), name='isisinterface_add'),
+    path('isis/interface/import/', views.ISISInterfaceListView.as_view(), name='isisinterface_import'),
+    path('isis/interface/edit/', views.ISISInterfaceBulkEditView.as_view(), name='isisinterface_bulk_edit'),
+    path('isis/interface/delete/', views.ISISInterfaceBulkDeleteView.as_view(), name='isisinterface_bulk_delete'),
+    path('isis/interface/<int:pk>/', views.ISISInterfaceView.as_view(), name='isisinterface'),
+    path('isis/interface/<int:pk>/edit/', views.ISISInterfaceEditView.as_view(), name='isisinterface_edit'),
+    path('isis/interface/<int:pk>/delete/', views.ISISInterfaceDeleteView.as_view(), name='isisinterface_delete'),
+    path('isis/interface/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='isisinterface_changelog', kwargs={'model': ISISInterface}),
+
     path('ospf/instance/', views.OSPFInstanceListView.as_view(), name='ospfinstance_list'),
     path('ospf/instance/add/', views.OSPFInstanceEditView.as_view(), name='ospfinstance_add'),
     path('ospf/instance/edit/', views.OSPFInstanceBulkEditView.as_view(), name='ospfinstance_bulk_edit'),
@@ -28,6 +49,7 @@ urlpatterns = [
     path('ospf/instance/<int:pk>/', views.OSPFInstanceView.as_view(), name='ospfinstance'),
     path('ospf/instance/<int:pk>/edit/', views.OSPFInstanceEditView.as_view(), name='ospfinstance_edit'),
     path('ospf/instance/<int:pk>/interfaces/', views.OSPFInstanceInterfacesView.as_view(), name='ospfinstance_interfaces'),
+    path('ospf/instance/<int:pk>/networks/', views.OSPFInstanceNetworksView.as_view(), name='ospfinstance_networks'),
     path('ospf/instance/<int:pk>/delete/', views.OSPFInstanceDeleteView.as_view(), name='ospfinstance_delete'),
     path('ospf/instance/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ospfinstance_changelog', kwargs={'model': OSPFInstance}),
 
@@ -51,6 +73,16 @@ urlpatterns = [
     path('ospf/interface/<int:pk>/edit/', views.OSPFInterfaceEditView.as_view(), name='ospfinterface_edit'),
     path('ospf/interface/<int:pk>/delete/', views.OSPFInterfaceDeleteView.as_view(), name='ospfinterface_delete'),
     path('ospf/interface/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ospfinterface_changelog', kwargs={'model': OSPFInterface}),
+
+    path('ospf/networks/', views.OSPFNetworksListView.as_view(), name='ospfnetworks_list'),
+    path('ospf/networks/add/', views.OSPFNetworksEditView.as_view(), name='ospfnetworks_add'),
+    path('ospf/networks/edit/', views.OSPFNetworksBulkEditView.as_view(), name='ospfnetworks_bulk_edit'),
+    path('ospf/networks/delete/', views.OSPFNetworksBulkDeleteView.as_view(), name='ospfnetworks_bulk_delete'),
+    path('ospf/networks/import/', views.OSPFNetworksListView.as_view(), name='ospfnetworks_import'),
+    path('ospf/networks/<int:pk>/', views.OSPFNetworksView.as_view(), name='ospfnetworks'),
+    path('ospf/networks/<int:pk>/edit/', views.OSPFNetworksEditView.as_view(), name='ospfnetworks_edit'),
+    path('ospf/networks/<int:pk>/delete/', views.OSPFNetworksDeleteView.as_view(), name='ospfnetworks_delete'),
+    path('ospf/networks/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ospfnetworks_changelog', kwargs={'model': OSPFNetworks}),
 
     path('eigrp/router/', views.EIGRPRouterListView.as_view(), name='eigrprouter_list'),
     path('eigrp/router/add/', views.EIGRPRouterEditView.as_view(), name='eigrprouter_add'),

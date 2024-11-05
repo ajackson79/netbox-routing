@@ -11,6 +11,14 @@ class StaticRouteQuery:
     static_route: StaticRouteType = strawberry_django.field()
     static_route_list: List[StaticRouteType] = strawberry_django.field()
 
+@strawberry.type(name="Query")
+class ISISQuery:
+    isis_instance: ISISInstanceType = strawberry_django.field()
+    isis_instance_list: List[ISISInstanceType] = strawberry_django.field()
+
+    isis_interface: ISISInterfaceType = strawberry_django.field()
+    isis_interface_list: List[ISISInterfaceType] = strawberry_django.field()
+
 
 @strawberry.type(name="Query")
 class OSPFQuery:
@@ -41,6 +49,7 @@ class EIGRPQuery:
 
 schema = [
     StaticRouteQuery,
+    ISISQuery,
     OSPFQuery,
     EIGRPQuery,
 ]

@@ -10,6 +10,9 @@ from netbox_routing import models
 
 __all__ = (
     'StaticRouteType',
+
+    'ISISInstanceType',
+    'ISISInterfaceType',
     
     'OSPFInstanceType',
     'OSPFAreaType',
@@ -35,8 +38,36 @@ class StaticRouteType(NetBoxObjectType):
     prefix: str | None
     next_hop: str | None
     metric: int | None
+    route_tag: int | None
     permanent: bool | None
 
+
+@strawberry_django.type(
+    models.ISISInstance,
+    fields='__all__',
+    filters=ISISInstanceFilter
+)
+class ISISInstanceType(NetBoxObjectType):
+
+    name: str
+    device: Annotated["DeviceType", strawberry.lazy('dcim.graphql.types')]
+    vrf: Annotated["VRFType", strawberry.lazy('ipam.graphql.types')] | None
+    net: str
+
+@strawberry_django.type(
+    models.ISISInterface,
+    fields='__all__',
+    filters=ISISInterfaceFilter
+)
+class ISISInterfaceType(NetBoxObjectType):
+
+    instance: Annotated["ISISInstanceType", strawberry.lazy('netbox_routing.graphql.types')]
+    interface: Annotated["InterfaceType", strawberry.lazy('dcim.graphql.types')]
+    passive: bool | None
+    metric: str | None
+    bfd: bool | None
+    authentication: str | None
+    passphrase: str | None
 
 @strawberry_django.type(
     models.OSPFInstance,

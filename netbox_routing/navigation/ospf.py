@@ -49,5 +49,19 @@ ospf_interfaces = PluginMenuItem(
         ),
     )
 )
+ospf_networks = PluginMenuItem(
+    link='plugins:netbox_routing:ospfnetworks_list',
+    link_text='Networks',
+    permissions=['netbox_routing.view_ospfnetworks'],
+    buttons=(
+        PluginMenuButton('plugins:netbox_routing:ospfnetworks_add', 'Add', 'mdi mdi-plus', ButtonColorChoices.GREEN),
+        PluginMenuButton(
+            'plugins:netbox_routing:ospfnetworks_import',
+            'Import',
+            'mdi mdi-upload',
+            ButtonColorChoices.CYAN
+        ),
+    )
+)
 
-MENUITEMS = (ospf_instance, ospf_area, ospf_interfaces)
+MENUITEMS = (ospf_instance, ospf_area, ospf_interfaces, ospf_networks)

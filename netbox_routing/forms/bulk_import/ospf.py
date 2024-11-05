@@ -5,13 +5,14 @@ from ipam.models import VRF
 from netbox.forms import NetBoxModelImportForm
 from utilities.forms.fields import CSVModelChoiceField
 
-from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface
+from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface, OSPFNetworks
 
 
 __all__ = (
     'OSPFInstanceImportForm',
     'OSPFAreaImportForm',
     'OSPFInterfaceImportForm',
+    'OSPFNetworksImportForm',
 )
 
 
@@ -63,4 +64,22 @@ class OSPFInterfaceImportForm(NetBoxModelImportForm):
 
     class Meta:
         model = OSPFInterface
-        fields = ('instance', 'area', 'interface', 'passive', 'description', 'comments', 'tags',)
+        fields = ('instance', 'area', 'interface', 'cost', 'passive', 'description', 'comments', 'tags',)
+
+class OSPFNetworksImportForm(NetBoxModelImportForm):
+    instance = CSVModelChoiceField(
+        queryset=OSPFInstance.objects.all(),
+        required=False,
+        to_field_name='name',
+        help_text=_('Name of OSPF Instance')
+    )
+    area = CSVModelChoiceField(
+        queryset=OSPFArea.objects.all(),
+        required=False,
+        to_field_name='name',
+        help_text=_('Area ID')
+    )
+
+    class Meta:
+        model = OSPFNetworks
+        fields = ('network','instance', 'area', 'comments', 'tags',)

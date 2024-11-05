@@ -8,13 +8,14 @@ from netbox_routing.choices import AuthenticationChoices
 from utilities.forms import BOOLEAN_WITH_BLANK_CHOICES, add_blank_choice
 from utilities.forms.fields import TagFilterField, DynamicModelMultipleChoiceField
 
-from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface
+from netbox_routing.models import OSPFInstance, OSPFArea, OSPFInterface, OSPFNetworks
 
 
 __all__ = (
     'OSPFAreaFilterForm',
     'OSPFInstanceFilterForm',
     'OSPFInterfaceFilterForm',
+    'OSPFNetworksFilterForm',
 )
 
 from utilities.forms.rendering import FieldSet
@@ -35,7 +36,7 @@ class OSPFInstanceFilterForm(NetBoxModelFilterSetForm):
     )
     model = OSPFInstance
     fieldsets = (
-        FieldSet('q', 'filter_id', 'tag', 'device'),
+        FieldSet('q', 'filter_id', 'tag', 'device', 'vrf'),
     )
     tag = TagFilterField(model)
 
@@ -56,31 +57,31 @@ class OSPFInterfaceFilterForm(NetBoxModelFilterSetForm):
         FieldSet('interface', name=_('Device')),
         FieldSet('priority', 'bfd', 'authentication', name=_('Attributes'))
     )
-    device_id = DynamicModelMultipleChoiceField(
+    device = DynamicModelMultipleChoiceField(
         queryset=Device.objects.all(),
         required=False,
         selector=True,
         label=_('Device'),
     )
-    vrf_id = DynamicModelMultipleChoiceField(
+    vrf = DynamicModelMultipleChoiceField(
         queryset=VRF.objects.all(),
         required=False,
         selector=True,
         label=_('VRF'),
     )
-    instance_id = DynamicModelMultipleChoiceField(
+    instance = DynamicModelMultipleChoiceField(
         queryset=OSPFInstance.objects.all(),
         required=False,
         selector=True,
         label=_('Instance'),
     )
-    area_id = DynamicModelMultipleChoiceField(
+    area = DynamicModelMultipleChoiceField(
         queryset=OSPFArea.objects.all(),
         required=False,
         selector=True,
         label=_('Area'),
     )
-    interface_id = DynamicModelMultipleChoiceField(
+    interface = DynamicModelMultipleChoiceField(
         queryset=Interface.objects.all(),
         required=False,
         selector=True,
@@ -100,11 +101,34 @@ class OSPFInterfaceFilterForm(NetBoxModelFilterSetForm):
             choices=BOOLEAN_WITH_BLANK_CHOICES
         )
     )
+    cost = forms.IntegerField(
+        required=False
+    )
     priority = forms.IntegerField(
         required=False
     )
     authentication = forms.ChoiceField(
         choices=add_blank_choice(AuthenticationChoices),
         required=False
+    )
+    tag = TagFilterField(model)
+
+class OSPFNetworksFilterForm(NetBoxModelFilterSetForm):
+    model = OSPFNetworks
+    instance = DynamicModelMultipleChoiceField(
+        queryset=OSPFInstance.objects.all(),
+        required=False,
+        selector=True,
+        label=_('Instance'),
+    )
+    area = DynamicModelMultipleChoiceField(
+        queryset=OSPFArea.objects.all(),
+        required=False,
+        selector=True,
+        label=_('Area'),
+    )
+    fieldsets = (
+        FieldSet('q', 'filter_id', 'tag'),
+        FieldSet('instance', 'area', name=_('OSPF'))
     )
     tag = TagFilterField(model)

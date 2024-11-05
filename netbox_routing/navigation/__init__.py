@@ -5,6 +5,7 @@ from .objects import MENUITEMS as OBJECT_MENU
 from .ospf import MENUITEMS as OSPF_MENU
 from .eigrp import eigrp
 from .static import MENUITEMS as STATIC_MENU
+from .isis import MENUITEMS as ISIS_MENU
 
 
 __all__ = (
@@ -16,6 +17,7 @@ menu = PluginMenu(
     groups=(
         # ('Routing Objects', OBJECT_MENU),
         ('Static', STATIC_MENU),
+        ('ISIS', ISIS_MENU),
         # ('BGP', BGP_MENU),
         ('OSPF', OSPF_MENU),
         ('EIGRP', eigrp),

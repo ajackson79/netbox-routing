@@ -8,12 +8,13 @@ from utilities.forms import BOOLEAN_WITH_BLANK_CHOICES, add_blank_choice
 from utilities.forms.fields import DynamicModelChoiceField, CommentField
 
 from netbox_routing import choices
-from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface
+from netbox_routing.models import OSPFArea, OSPFInstance, OSPFInterface, OSPFNetworks
 
 __all__ = (
     'OSPFInterfaceBulkEditForm',
     'OSPFInstanceBulkEditForm',
     'OSPFAreaBulkEditForm',
+    'OSPFNetworksBulkEditForm',
 )
 
 from utilities.forms.rendering import FieldSet
@@ -77,6 +78,7 @@ class OSPFInterfaceBulkEditForm(NetBoxModelBulkEditForm):
         required=False,
         selector=True
     )
+    cost = forms.IntegerField(label=_('Cost'), required=False)
     passive = forms.ChoiceField(label=_('Passive'), choices=BOOLEAN_WITH_BLANK_CHOICES, required=False)
     priority = forms.IntegerField(label=_('Priority'), required=False)
     bfd = forms.ChoiceField(label=_('BFD'), choices=BOOLEAN_WITH_BLANK_CHOICES, required=False)
@@ -99,5 +101,26 @@ class OSPFInterfaceBulkEditForm(NetBoxModelBulkEditForm):
         FieldSet('instance', 'area', name='OSPF'),
         FieldSet('passive', 'priority', 'bfd', 'authentication', 'passphrase', name='Attributes'),
         FieldSet('description'),
+    )
+    nullable_fields = ()
+
+class OSPFNetworksBulkEditForm(NetBoxModelBulkEditForm):
+    instance = DynamicModelChoiceField(
+        queryset=OSPFInstance.objects.all(),
+        label=_('OSPF Instance'),
+        required=False,
+        selector=True
+    )
+    area = DynamicModelChoiceField(
+        queryset=OSPFArea.objects.all(),
+        label=_('OSPF Area'),
+        required=False,
+        selector=True
+    )
+    comments = CommentField()
+
+    model = OSPFNetworks
+    fieldsets= (
+        FieldSet('instance', 'area'),
     )
     nullable_fields = ()
