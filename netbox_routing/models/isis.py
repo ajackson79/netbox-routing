@@ -59,7 +59,11 @@ class ISISInstance(PrimaryModel):
         ordering = ('name', 'device', 'vrf', 'net')
         constraints = (
             models.UniqueConstraint(
-                fields=('name', 'device', 'net'),
+                fields=('net', ),
+                name='%(app_label)s_%(class)s_unique_net'
+            ),
+            models.UniqueConstraint(
+                fields=('name', 'device'),
                 name='%(app_label)s_%(class)s_unique_name_device'
             ),
         )
