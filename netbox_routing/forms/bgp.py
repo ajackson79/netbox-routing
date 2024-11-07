@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.forms import fields
 from django.utils.translation import gettext as _
+from utilities.forms.rendering import FieldSet
 
 
 from dcim.models import Device
@@ -30,8 +31,8 @@ class BGPSettingMixin:
 
     def _append_settings_fields(self):
         assigned_fields = []
-        fieldset = (
-            _('Settings'), [
+        fieldset = FieldSet(
+            _('Settings'), 
                 'router_id',
                 'asdot',
                 'timers_keepalive',
@@ -50,8 +51,8 @@ class BGPSettingMixin:
                 'additional_paths_send',
                 'additional_paths_install',
                 'test',
-            ]
-        )
+                name=_('Settings')
+                )
         for key, label in BGPSettingChoices.CHOICES:
             initial = None
             if hasattr(self, 'instance'):
@@ -96,9 +97,9 @@ class BGPSettingMixin:
                 css = self.fields[key].widget.attrs.get('class', '')
                 self.fields[key].widget.attrs['class'] = f'{css} form-control'
             assigned_fields.append(key)
-            if key not in fieldset[1]:
-                fieldset[1].append(key)
-        if fieldset not in self.fieldsets:
+            if key not in fieldset.items:
+                fieldset.items.append(key)
+        if not any(f.items == fieldset.items for f in self.fieldsets):
             self.fieldsets.append(fieldset)
 
     def _clean_fieldset(self):
@@ -164,9 +165,9 @@ class BGPRouterForm(BGPSettingMixin, NetBoxModelForm):
     )
 
 
-    fieldsets = (
+    fieldsets = [
         FieldSet('device', 'asn', name=_('Router')),
-    )
+    ]
 
     class Meta:
         model = BGPRouter
@@ -191,9 +192,9 @@ class BGPScopeForm(BGPSettingMixin, NetBoxModelForm):
     )
 
 
-    fieldsets = (
+    fieldsets = [
         FieldSet('router', 'vrf', name=_('Scope')),
-    )
+    ]
 
     class Meta:
         model = BGPScope
@@ -217,9 +218,9 @@ class BGPAddressFamilyForm(BGPSettingMixin, NetBoxModelForm):
     )
 
 
-    fieldsets = (
+    fieldsets = [
         FieldSet('scope', 'address_family', name=_('Address Family')),
-    )
+    ]
 
     class Meta:
         model = BGPAddressFamily
@@ -241,9 +242,9 @@ class BGPSettingForm(NetBoxModelForm):
     )
 
 
-    fieldsets = (
+    fieldsets = [
         FieldSet('key', 'value', name=_('Settings')),
-    )
+    ]
 
     class Meta:
         model = BGPSetting

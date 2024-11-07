@@ -18,7 +18,7 @@ menu = PluginMenu(
         # ('Routing Objects', OBJECT_MENU),
         ('Static', STATIC_MENU),
         ('ISIS', ISIS_MENU),
-        # ('BGP', BGP_MENU),
+        ('BGP', BGP_MENU),
         ('OSPF', OSPF_MENU),
         ('EIGRP', eigrp),
     ),
